@@ -54,44 +54,36 @@ def run():
 
     print("Starting Play-Cricket WhatsApp Bot...")
 
-    previous_data = None
+    try:
 
-    while True:
+        matches = get_live_scores()
 
-        try:
+        if matches:
 
-            matches = get_live_scores()
+            for match in matches:
 
-            if matches:
+                message = build_message(match)
 
-                current_data = str(matches)
+                print("Sending update:")
+                print(message)
 
-                if current_data != previous_data:
+                send_whatsapp_message(message)
 
-                    previous_data = current_data
+                # Optional innings complete alert
+                if match["overs"] == "40.0":
 
-                    for match in matches:
+                    send_whatsapp_message(
+                        "🏁 Innings Complete\n"
+                        f"Final Score: {match['score']}"
+                    )
 
-                        message = build_message(match)
+        else:
 
-                        print("Sending update:")
-                        print(message)
+            print("No matches found.")
 
-                        send_whatsapp_message(message)
+    except Exception as e:
 
-                        # Send innings complete message
-                        if match["overs"] == "40.0":
-
-                            send_whatsapp_message(
-                                "🏁 Innings Complete\n"
-                                f"Final Score: {match['score']}"
-                            )
-
-            time.sleep(CHECK_INTERVAL)
-
-        except Exception as e:
-
-            print(f"ERROR: {e}")
+        print(f"ERROR: {e}")
 
             time.sleep(CHECK_INTERVAL)
 
