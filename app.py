@@ -85,8 +85,5 @@ def run():
 
         print(f"ERROR: {e}")
 
-            time.sleep(CHECK_INTERVAL)
-
-
 if __name__ == "__main__":
     run()
